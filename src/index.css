@@ -1,0 +1,183 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Theme Token Variables */
+:root {
+  /* Light Mode - Text Colors */
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #4a4a4a;
+  --color-text-muted: #999999;
+
+  /* Light Mode - Background Colors */
+  --color-bg-primary: #fef5f0;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #fff1e6;
+
+  /* Light Mode - Border & Ring Colors */
+  --color-border-primary: #ffd4a3;
+  --color-border-secondary: #ffb366;
+  --color-ring-primary: #ffd4a3;
+
+  /* Light Mode - Accent Colors */
+  --color-accent-primary: #e87722;
+  --color-accent-secondary: #ff9a3d;
+  --color-accent-light: #fff0e6;
+
+  /* Light Mode - Interactive States */
+  --color-hover-accent: #d4621a;
+  --color-focus-accent: #f58a2f;
+
+  /* Light Mode - Component Specific */
+  --color-glass-bg: rgba(255, 255, 255, 0.95);
+  --color-glass-ring: rgba(255, 212, 163, 0.6);
+
+  /* Display Settings */
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+}
+
+/* Dark Mode Theme Variables */
+.dark {
+  /* Dark Mode - Text Colors */
+  --color-text-primary: #ffd4a3;
+  --color-text-secondary: #ff9a3d;
+  --color-text-muted: #cc9966;
+
+  /* Dark Mode - Background Colors */
+  --color-bg-primary: #1a1410;
+  --color-bg-secondary: #2a2015;
+  --color-bg-tertiary: #3d2817;
+
+  /* Dark Mode - Border & Ring Colors */
+  --color-border-primary: #4d3419;
+  --color-border-secondary: #663d26;
+  --color-ring-primary: #4d3419;
+
+  /* Dark Mode - Accent Colors */
+  --color-accent-primary: #ff9a3d;
+  --color-accent-secondary: #ffb366;
+  --color-accent-light: #4d2817;
+
+  /* Dark Mode - Interactive States */
+  --color-hover-accent: #ffc266;
+  --color-focus-accent: #ffb366;
+
+  /* Dark Mode - Component Specific */
+  --color-glass-bg: rgba(42, 32, 21, 0.85);
+  --color-glass-ring: rgba(77, 52, 25, 1);
+}
+
+@layer base {
+  .dark body {
+    @apply text-[var(--color-text-primary)];
+  }
+  .dark h1,
+  .dark h2,
+  .dark h3,
+  .dark h4,
+  .dark h5,
+  .dark h6 {
+    @apply text-amber-100;
+  }
+  .dark p {
+    @apply text-[var(--color-text-primary)];
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Work Sans", sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@layer components {
+  /* Text Color Utilities */
+  .text-primary {
+    color: var(--color-text-primary);
+  }
+  
+  .text-secondary {
+    color: var(--color-text-secondary);
+  }
+  
+  .text-muted {
+    color: var(--color-text-muted);
+  }
+
+  /* Background Color Utilities */
+  .bg-primary {
+    background-color: var(--color-bg-primary);
+  }
+  
+  .bg-secondary {
+    background-color: var(--color-bg-secondary);
+  }
+  
+  .bg-tertiary {
+    background-color: var(--color-bg-tertiary);
+  }
+
+  /* Border Color Utilities */
+  .border-primary {
+    border-color: var(--color-border-primary);
+  }
+  
+  .border-secondary {
+    border-color: var(--color-border-secondary);
+  }
+
+  /* Accent Color Utilities */
+  .text-accent {
+    color: var(--color-accent-primary);
+  }
+  
+  .text-accent-secondary {
+    color: var(--color-accent-secondary);
+  }
+  
+  .bg-accent-light {
+    background-color: var(--color-accent-light);
+  }
+
+  /* Component Classes */
+  .glass-panel {
+    @apply rounded-2xl backdrop-blur;
+    background-color: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-ring);
+  }
+  
+  .pill {
+    @apply rounded-full border px-4 py-2 text-sm font-medium transition hover:-translate-y-0.5;
+    color: var(--color-text-secondary);
+    border-color: var(--color-border-primary);
+    background-color: var(--color-bg-secondary);
+  }
+  
+  .pill:hover {
+    color: var(--color-accent-primary);
+    border-color: var(--color-accent-secondary);
+  }
+  
+  .pill-active {
+    @apply shadow-sm;
+    color: var(--color-accent-primary);
+    border-color: var(--color-accent-primary);
+    background-color: var(--color-accent-light);
+  }
+  
+  .ellipsis-cell {
+    @apply overflow-hidden whitespace-nowrap text-ellipsis;
+  }
+}
