@@ -32,7 +32,7 @@ The frontend now includes a complete authentication system with login, logout, a
 Create or update `.env.local` in the frontend directory:
 
 ```env
-VITE_API_BASE_URL=http://localhost:8000
+VITE_API_BASE_URL=http://3.111.187.105
 ```
 
 Replace `http://localhost:8000` with your actual backend URL if different.
@@ -192,7 +192,7 @@ const API_BASE_URL = "https://your-api.com";
 Or use the environment variable:
 
 ```javascript
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://3.111.187.105";
 ```
 
 ## Testing
