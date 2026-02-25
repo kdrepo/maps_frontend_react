@@ -24,78 +24,95 @@ const saveUser = (user) => {
 
 export const useAuth = () => {
   const [user, setUser] = useState(loadUser());
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Start with loading true
   const [error, setError] = useState(null);
+
+  const fetchUser = useCallback(async () => {
+    try {
+      setLoading(true);
+      const userData = await apiCall("api/api/auth/status/");
+      setUser(userData);
+      saveUser(userData);
+    } catch (err) {
+      // This can happen if the token is invalid
+      authStorage.clear();
+      setUser(null);
+      saveUser(null);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     const boot = async () => {
       const access = authStorage.getAccess();
-      if (!access) return;
-      try {
-        setLoading(true);
-        await apiCall("/api/auth/token/verify/", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token: access }),
-        });
-      } catch {
-        authStorage.clear();
-        setUser(null);
-        saveUser(null);
-      } finally {
-        setLoading(false);
+      if (access) {
+        await fetchUser(); // Fetch user if token exists
+      } else {
+        setLoading(false); // No token, not loading
       }
     };
     boot();
-  }, []);
+  }, [fetchUser]);
+
+  const ssoLogin = useCallback(async (token) => {
+    setLoading(true);
+    setError(null);
+    try {
+      // Directly set the token received from SSO
+      authStorage.setTokens({ access: token });
+      // Fetch user data using the new token
+      await fetchUser();
+    } catch (err) {
+      setError(err.message);
+      authStorage.clear();
+      setUser(null);
+      saveUser(null);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchUser]);
 
   const login = useCallback(async (identifier, password) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await apiLogin(identifier, password);
-      const userData = {
-        id: data.user_id,
-        identifier,
-      };
-      setUser(userData);
-      saveUser(userData);
-      return data;
+      await apiLogin(identifier, password);
+      await fetchUser();
     } catch (err) {
       setError(err.message);
       throw err;
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [fetchUser]);
 
   const verifyOtp = useCallback(async (phone, otp) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await apiVerifyOtp(phone, otp);
-      const userData = {
-        id: data.user_id,
-        phone,
-      };
-      setUser(userData);
-      saveUser(userData);
-      return data;
+      await apiVerifyOtp(phone, otp);
+      await fetchUser();
     } catch (err) {
       setError(err.message);
       throw err;
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [fetchUser]);
 
   const logout = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      apiLogout();
+      apiLogout(); // Clears tokens from storage
       setUser(null);
       saveUser(null);
+      // For React Native WebView integration
+      if (window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage('logout');
+      }
     } finally {
       setLoading(false);
     }
@@ -106,6 +123,7 @@ export const useAuth = () => {
     loading,
     error,
     login,
+    ssoLogin,
     logout,
     verifyOtp,
     isAuthenticated: !!user,
